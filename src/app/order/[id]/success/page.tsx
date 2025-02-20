@@ -3,22 +3,20 @@ import Link from 'next/link';
 import { CheckCircle } from 'lucide-react';
 import { notFound } from 'next/navigation';
 
-interface PageProps {
-  params: Promise<{
-    id: string;
-  }>;
-  searchParams: { [key: string]: string | string[] | undefined };
-}
-
 export const metadata: Metadata = {
   title: 'Order Success - SmileToTheWorld',
   description: 'Your order has been successfully placed',
 };
 
-export default async function OrderSuccessPage({ params }: PageProps) {
-  const resolvedParams = await params;
+export default async function OrderSuccessPage({
+  params,
+}: {
+  params: { id: string };
+  searchParams: { [key: string]: string | string[] | undefined };
+}) {
+  const { id } = params;
   
-  if (!resolvedParams.id) {
+  if (!id) {
     notFound();
   }
 
@@ -32,11 +30,11 @@ export default async function OrderSuccessPage({ params }: PageProps) {
           Order Successfully Placed!
         </h1>
         <p className="text-lg text-gray-600 dark:text-gray-400 mb-8">
-          Thank you for your order. Your order number is #{resolvedParams.id}
+          Thank you for your order. Your order number is #{id}
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
-            href={`/order/${resolvedParams.id}`}
+            href={`/order/${id}`}
             className="inline-flex items-center justify-center px-6 py-3 text-base font-medium text-white bg-primary hover:bg-primary/90 rounded-lg transition-colors"
           >
             View Order Details
