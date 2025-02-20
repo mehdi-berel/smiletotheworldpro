@@ -18,7 +18,8 @@ import {
   Settings,
   List,
   DollarSign,
-  CreditCard
+  CreditCard,
+  LogIn
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from 'next-themes';
@@ -106,11 +107,15 @@ export default function Navbar() {
             <ShoppingCart className="h-5 w-5" />
           </Link>
 
-          {/* Auth Button */}
-          <AuthButton />
+          {/* Auth Button - Only show on desktop */}
+          <div className="hidden lg:block">
+            <AuthButton />
+          </div>
 
-          {/* Profile Button */}
-          <ProfileButton />
+          {/* Profile Button - Only show on desktop */}
+          <div className="hidden lg:block">
+            <ProfileButton />
+          </div>
 
           {/* Mobile menu button */}
           <button
@@ -157,6 +162,7 @@ export default function Navbar() {
               </div>
               <div className="mt-6 flow-root">
                 <div className="-my-6 divide-y divide-gray-500/10">
+                  {/* Main Navigation */}
                   <div className="space-y-2 py-6">
                     {navigation.map((item) => (
                       <Link
@@ -172,6 +178,8 @@ export default function Navbar() {
                       </Link>
                     ))}
                   </div>
+                  
+                  {/* Profile Menu Items */}
                   <div className="py-6">
                     {menuItems.map((item) => (
                       <Link
@@ -186,6 +194,13 @@ export default function Navbar() {
                         </div>
                       </Link>
                     ))}
+                  </div>
+
+                  {/* Sign In/Out Section */}
+                  <div className="py-6">
+                    <div className="mobile-nav-link">
+                      <AuthButton className="w-full flex items-center" />
+                    </div>
                   </div>
                 </div>
               </div>

@@ -85,7 +85,7 @@ export default function Hero() {
               <div className="absolute -inset-4 bg-gradient-to-r from-primary to-primary/50 rounded-xl blur-2xl opacity-30 animate-pulse" />
               <div className="relative aspect-[4/3] overflow-hidden rounded-xl">
                 <Image
-                  src="/hero.jpg"
+                  src="/images/hero-dental.jpg"
                   alt="Modern dental practice"
                   fill
                   className="object-cover"
