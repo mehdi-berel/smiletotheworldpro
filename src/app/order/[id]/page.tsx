@@ -1,26 +1,20 @@
-import { type Metadata } from 'next'
-import OrderProcess from '@/app/components/order/OrderProcess'
+import { Metadata } from 'next';
+import OrderDetails from './OrderDetails';
+import { notFound } from 'next/navigation';
+
+interface Props {
+  params: { id: string };
+}
 
 export const metadata: Metadata = {
-  title: 'Order Process - SmileToTheWorld',
-  description: 'Complete your order with SmileToTheWorld',
-}
+  title: 'Order Details - SmileToTheWorld',
+  description: 'View your order details and tracking information',
+};
 
-interface PageProps {
-  params: {
-    id: string
+export default async function Page({ params }: Props) {
+  if (!params.id) {
+    notFound();
   }
-}
 
-export default function Page({ params }: PageProps) {
-  return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
-      <div className="container mx-auto px-4">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">
-          Complete Your Order
-        </h1>
-        <OrderProcess id={params.id} />
-      </div>
-    </div>
-  )
+  return <OrderDetails orderId={params.id} />;
 }
