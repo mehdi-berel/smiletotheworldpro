@@ -5,13 +5,17 @@ import { LogIn, User } from 'lucide-react'
 import { useAuth } from './AuthContext'
 import AuthModal from './AuthModal'
 
-export default function AuthButton() {
+interface AuthButtonProps {
+  className?: string;
+}
+
+export default function AuthButton({ className = '' }: AuthButtonProps) {
   const { user, isAuthenticated, signOut } = useAuth()
   const [showAuthModal, setShowAuthModal] = useState(false)
 
   if (isAuthenticated && user) {
     return (
-      <div className="relative group">
+      <div className={`relative group ${className}`}>
         <button className="flex items-center space-x-2 text-gray-700 dark:text-gray-300 hover:text-primary">
           <User className="w-5 h-5" />
           <span>{user.firstName}</span>
@@ -32,7 +36,7 @@ export default function AuthButton() {
     <>
       <button
         onClick={() => setShowAuthModal(true)}
-        className="flex items-center space-x-2 text-gray-700 dark:text-gray-300 hover:text-primary"
+        className={`flex items-center space-x-2 text-gray-700 dark:text-gray-300 hover:text-primary ${className}`}
       >
         <LogIn className="w-5 h-5" />
         <span>Sign In</span>

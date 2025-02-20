@@ -98,11 +98,11 @@ export default function Navbar() {
             )}
           </button>
 
-          {/* Cart Link */}
+          {/* Marketplace Link */}
           <Link
-            href="/cart"
+            href="/marketplace"
             className="nav-button"
-            aria-label="Shopping cart"
+            aria-label="Marketplace"
           >
             <ShoppingCart className="h-5 w-5" />
           </Link>
@@ -198,8 +198,8 @@ export default function Navbar() {
 
                   {/* Sign In/Out Section */}
                   <div className="py-6">
-                    <div className="mobile-nav-link">
-                      <AuthButton className="w-full flex items-center" />
+                    <div className="block px-4 py-2">
+                      <AuthButton className="w-full justify-center" />
                     </div>
                   </div>
                 </div>
