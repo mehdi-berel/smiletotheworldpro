@@ -3,8 +3,11 @@ import Link from 'next/link';
 import { CheckCircle } from 'lucide-react';
 import { notFound } from 'next/navigation';
 
-interface Props {
-  params: { id: string };
+type PageProps = {
+  params: {
+    id: string;
+  };
+  searchParams: { [key: string]: string | string[] | undefined };
 }
 
 export const metadata: Metadata = {
@@ -12,7 +15,7 @@ export const metadata: Metadata = {
   description: 'Your order has been successfully placed',
 };
 
-export default function OrderSuccessPage({ params }: Props) {
+export default function OrderSuccessPage({ params }: PageProps) {
   if (!params.id) {
     notFound();
   }

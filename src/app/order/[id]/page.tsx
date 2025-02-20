@@ -2,8 +2,11 @@ import { Metadata } from 'next';
 import OrderDetails from './OrderDetails';
 import { notFound } from 'next/navigation';
 
-interface Props {
-  params: { id: string };
+type PageProps = {
+  params: {
+    id: string;
+  };
+  searchParams: { [key: string]: string | string[] | undefined };
 }
 
 export const metadata: Metadata = {
@@ -11,7 +14,7 @@ export const metadata: Metadata = {
   description: 'View your order details and tracking information',
 };
 
-export default async function Page({ params }: Props) {
+export default function Page({ params }: PageProps) {
   if (!params.id) {
     notFound();
   }

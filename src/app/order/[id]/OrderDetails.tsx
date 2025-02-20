@@ -33,31 +33,32 @@ export default function OrderDetails({ orderId }: OrderDetailsProps) {
     async function fetchOrder() {
       try {
         setIsLoading(true);
-        setError(null);
         // TODO: Replace with actual API call
         const mockOrder: Order = {
           id: orderId,
           status: 'processing',
           date: new Date().toISOString(),
-          total: 2999.99,
+          total: 299.99,
           items: [
             {
-              name: 'Dental Chair Pro X3000',
+              name: 'Dental Cleaning Kit',
               quantity: 1,
-              price: 2999.99,
-              image: '/placeholder.jpg'
+              price: 299.99,
+              image: '/images/product1.jpg'
             }
           ],
           shipping: {
             address: '123 Main St, City, Country',
-            tracking: 'DHL-123456789',
-            estimatedDelivery: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString()
+            tracking: 'TRK123456789',
+            estimatedDelivery: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
           }
         };
+        
         setOrder(mockOrder);
+        setError(null);
       } catch (err) {
+        setError('Failed to fetch order details. Please try again later.');
         console.error('Error fetching order:', err);
-        setError('Failed to load order details. Please try again later.');
       } finally {
         setIsLoading(false);
       }
@@ -70,26 +71,18 @@ export default function OrderDetails({ orderId }: OrderDetailsProps) {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto">
-          <div className="animate-pulse space-y-4">
-            <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/4"></div>
-            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/3"></div>
-            <div className="space-y-3">
-              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded"></div>
-              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-5/6"></div>
-            </div>
-          </div>
-        </div>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto text-center">
-          <p className="text-red-600 dark:text-red-400">{error}</p>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-red-500 text-center">
+          <h2 className="text-xl font-semibold mb-2">Error</h2>
+          <p>{error}</p>
         </div>
       </div>
     );
@@ -97,106 +90,111 @@ export default function OrderDetails({ orderId }: OrderDetailsProps) {
 
   if (!order) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto text-center">
-          <p className="text-gray-600 dark:text-gray-400">Order not found</p>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-gray-500 text-center">
+          <h2 className="text-xl font-semibold mb-2">Order Not Found</h2>
+          <p>The requested order could not be found.</p>
         </div>
       </div>
     );
   }
 
-  const statusStyle = statusStyles[order.status];
-
   return (
-    <div className="container mx-auto px-4 py-8">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="max-w-4xl mx-auto space-y-8"
-      >
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-              Order #{order.id}
-            </h1>
-            <p className="text-gray-600 dark:text-gray-400">
-              Placed on {new Date(order.date).toLocaleDateString()}
-            </p>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className={`px-3 py-1 text-sm font-medium rounded-full ${statusStyle.bg} ${statusStyle.text}`}>
-              {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
-            </span>
-          </div>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden">
+        <div className="px-4 py-5 sm:px-6">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+            Order #{order.id}
+          </h2>
+          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+            Placed on {new Date(order.date).toLocaleDateString()}
+          </p>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="border-t border-gray-200 dark:border-gray-700 px-4 py-5 sm:p-6">
+          <div className="space-y-6">
             <div>
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                <Package className="w-5 h-5 text-primary" />
-                Order Items
-              </h2>
-              {order.items.map((item, index) => (
-                <div key={index} className="flex items-start gap-4 pb-4 border-b border-gray-200 dark:border-gray-700">
-                  <div className="flex-1">
-                    <h3 className="font-medium text-gray-900 dark:text-white">{item.name}</h3>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      Quantity: {item.quantity} × ${item.price.toLocaleString()}
-                    </p>
-                  </div>
-                  <p className="font-medium text-gray-900 dark:text-white">
-                    ${(item.quantity * item.price).toLocaleString()}
-                  </p>
-                </div>
-              ))}
-              <div className="mt-4 flex justify-between items-center pt-4 border-t border-gray-200 dark:border-gray-700">
-                <span className="font-medium text-gray-900 dark:text-white">Total</span>
-                <span className="text-xl font-bold text-primary">
-                  ${order.total.toLocaleString()}
+              <h3 className="text-lg font-medium text-gray-900 dark:text-white">
+                Order Status
+              </h3>
+              <div className="mt-2">
+                <span
+                  className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+                    statusStyles[order.status].bg
+                  } ${statusStyles[order.status].text}`}
+                >
+                  {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
                 </span>
               </div>
             </div>
 
             <div>
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                <Truck className="w-5 h-5 text-primary" />
-                Shipping Details
-              </h2>
-              <div className="space-y-4">
-                <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Delivery Address</p>
-                  <p className="font-medium text-gray-900 dark:text-white">{order.shipping.address}</p>
+              <h3 className="text-lg font-medium text-gray-900 dark:text-white">
+                Items
+              </h3>
+              <div className="mt-2 space-y-4">
+                {order.items.map((item, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                    className="flex items-center space-x-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg"
+                  >
+                    <div className="flex-shrink-0 h-16 w-16">
+                      <img
+                        src={item.image}
+                        alt={item.name}
+                        className="h-full w-full object-cover rounded"
+                      />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                        {item.name}
+                      </p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">
+                        Quantity: {item.quantity}
+                      </p>
+                    </div>
+                    <div className="flex-shrink-0">
+                      <p className="text-sm font-medium text-gray-900 dark:text-white">
+                        ${item.price.toFixed(2)}
+                      </p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <h3 className="text-lg font-medium text-gray-900 dark:text-white">
+                Shipping Information
+              </h3>
+              <div className="mt-2 space-y-4">
+                <div className="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
+                  <Package className="h-5 w-5" />
+                  <span>{order.shipping.address}</span>
                 </div>
-                <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Tracking Number</p>
-                  <p className="font-medium text-gray-900 dark:text-white">{order.shipping.tracking}</p>
+                <div className="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
+                  <Truck className="h-5 w-5" />
+                  <span>Tracking: {order.shipping.tracking}</span>
                 </div>
-                <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Estimated Delivery</p>
-                  <p className="font-medium text-gray-900 dark:text-white">
-                    {new Date(order.shipping.estimatedDelivery).toLocaleDateString()}
-                  </p>
+                <div className="text-sm text-gray-500 dark:text-gray-400">
+                  Estimated Delivery:{' '}
+                  {new Date(order.shipping.estimatedDelivery).toLocaleDateString()}
                 </div>
+              </div>
+            </div>
+
+            <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
+              <div className="flex justify-between text-base font-medium text-gray-900 dark:text-white">
+                <p>Total</p>
+                <p>${order.total.toFixed(2)}</p>
               </div>
             </div>
           </div>
         </div>
-
-        <div className="flex justify-between items-center">
-          <button
-            onClick={() => window.history.back()}
-            className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors"
-          >
-            ← Back to Orders
-          </button>
-          <button
-            className="px-4 py-2 text-sm font-medium text-white bg-primary hover:bg-primary/90 rounded-lg transition-colors"
-          >
-            Download Invoice
-          </button>
-        </div>
-      </motion.div>
+      </div>
     </div>
   );
 }
