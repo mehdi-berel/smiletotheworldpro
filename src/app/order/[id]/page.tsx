@@ -2,10 +2,10 @@ import { Metadata } from 'next';
 import OrderDetails from './OrderDetails';
 import { notFound } from 'next/navigation';
 
-type PageProps = {
-  params: {
+interface PageProps {
+  params: Promise<{
     id: string;
-  };
+  }>;
   searchParams: { [key: string]: string | string[] | undefined };
 }
 
@@ -14,10 +14,12 @@ export const metadata: Metadata = {
   description: 'View your order details and tracking information',
 };
 
-export default function Page({ params }: PageProps) {
-  if (!params.id) {
+export default async function Page({ params }: PageProps) {
+  const resolvedParams = await params;
+  
+  if (!resolvedParams.id) {
     notFound();
   }
 
-  return <OrderDetails orderId={params.id} />;
+  return <OrderDetails orderId={resolvedParams.id} />;
 }
