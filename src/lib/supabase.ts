@@ -3,12 +3,8 @@ import { createClient } from '@supabase/supabase-js'
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
-if (!supabaseUrl) {
-  console.error('Missing environment variable: NEXT_PUBLIC_SUPABASE_URL')
-}
-
-if (!supabaseAnonKey) {
-  console.error('Missing environment variable: NEXT_PUBLIC_SUPABASE_ANON_KEY')
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error('Missing Supabase environment variables')
 }
 
 export const supabase = createClient(
@@ -80,4 +76,15 @@ export async function getOrder(orderId: string) {
 
   if (error) throw error
   return data as Order
+}
+
+// Add error handling wrapper
+export const handleSupabaseError = (error: any) => {
+  if (error.message === 'Invalid login credentials') {
+    return new Error('Invalid email or password')
+  }
+  if (error.message?.includes('duplicate key')) {
+    return new Error('An account with this email already exists')
+  }
+  return error
 }

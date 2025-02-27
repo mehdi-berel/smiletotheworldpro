@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { LogIn, User } from 'lucide-react'
+import { LogIn } from 'lucide-react'
 import { useAuth } from './AuthContext'
 import AuthModal from './AuthModal'
 
@@ -10,26 +10,21 @@ interface AuthButtonProps {
 }
 
 export default function AuthButton({ className = '' }: AuthButtonProps) {
-  const { user, isAuthenticated, signOut } = useAuth()
+  const { isAuthenticated, loading } = useAuth()
   const [showAuthModal, setShowAuthModal] = useState(false)
 
-  if (isAuthenticated && user) {
+  // Show loading state
+  if (loading) {
     return (
-      <div className={`relative group ${className}`}>
-        <button className="flex items-center space-x-2 text-gray-700 dark:text-gray-300 hover:text-primary">
-          <User className="w-5 h-5" />
-          <span>{user.firstName}</span>
-        </button>
-        <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 hidden group-hover:block">
-          <button
-            onClick={signOut}
-            className="block w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 text-left"
-          >
-            Sign Out
-          </button>
-        </div>
+      <div className={`flex items-center ${className}`}>
+        <span className="text-gray-500 dark:text-gray-400">Loading...</span>
       </div>
-    )
+    );
+  }
+
+  // If authenticated, don't render the button
+  if (isAuthenticated) {
+    return null;
   }
 
   return (

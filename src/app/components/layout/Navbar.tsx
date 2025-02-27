@@ -19,12 +19,14 @@ import {
   List,
   DollarSign,
   CreditCard,
-  LogIn
+  LogIn,
+  LogOut
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from 'next-themes';
 import AuthButton from '../auth/AuthButton';
 import ProfileButton from '../profile/ProfileButton';
+import { useAuth } from '../auth/AuthContext';
 
 const navigation = [
   { name: 'Home', href: '/', icon: Home },
@@ -46,6 +48,7 @@ const menuItems = [
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { theme, setTheme } = useTheme();
+  const { user, isAuthenticated, signOut } = useAuth();
 
   const toggleTheme = () => {
     setTheme(theme === 'dark' ? 'light' : 'dark');
@@ -107,14 +110,9 @@ export default function Navbar() {
             <ShoppingCart className="h-5 w-5" />
           </Link>
 
-          {/* Auth Button - Only show on desktop */}
+          {/* Auth/Profile Buttons */}
           <div className="hidden lg:block">
-            <AuthButton />
-          </div>
-
-          {/* Profile Button - Only show on desktop */}
-          <div className="hidden lg:block">
-            <ProfileButton />
+            {isAuthenticated ? <ProfileButton /> : <AuthButton />}
           </div>
 
           {/* Mobile menu button */}
@@ -179,29 +177,47 @@ export default function Navbar() {
                     ))}
                   </div>
                   
-                  {/* Profile Menu Items */}
-                  <div className="py-6">
-                    {menuItems.map((item) => (
-                      <Link
-                        key={item.name}
-                        href={item.href}
-                        className="mobile-nav-link"
-                        onClick={() => setMobileMenuOpen(false)}
+                  {/* Profile Menu Items - Only show when authenticated */}
+                  {isAuthenticated && (
+                    <div className="py-6">
+                      {menuItems.map((item) => (
+                        <Link
+                          key={item.name}
+                          href={item.href}
+                          className="mobile-nav-link"
+                          onClick={() => setMobileMenuOpen(false)}
+                        >
+                          <div className="flex items-center">
+                            <item.icon className="h-5 w-5 mr-3" />
+                            {item.name}
+                          </div>
+                        </Link>
+                      ))}
+                      
+                      {/* Mobile Sign Out Button */}
+                      <button
+                        onClick={async () => {
+                          await signOut();
+                          setMobileMenuOpen(false);
+                        }}
+                        className="mobile-nav-link w-full text-left text-red-600 dark:text-red-400"
                       >
                         <div className="flex items-center">
-                          <item.icon className="h-5 w-5 mr-3" />
-                          {item.name}
+                          <LogOut className="h-5 w-5 mr-3" />
+                          Sign Out
                         </div>
-                      </Link>
-                    ))}
-                  </div>
-
-                  {/* Sign In/Out Section */}
-                  <div className="py-6">
-                    <div className="block px-4 py-2">
-                      <AuthButton className="w-full justify-center" />
+                      </button>
                     </div>
-                  </div>
+                  )}
+
+                  {/* Auth Button - Only show when not authenticated */}
+                  {!isAuthenticated && (
+                    <div className="py-6">
+                      <div className="block px-4 py-2">
+                        <AuthButton className="w-full justify-center" />
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </motion.div>

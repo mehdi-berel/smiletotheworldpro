@@ -9,7 +9,7 @@ interface SignInFormProps {
 }
 
 export default function SignInForm({ onSuccess }: SignInFormProps) {
-  const { signIn } = useAuth()
+  const { signInWithEmail } = useAuth()
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -24,20 +24,21 @@ export default function SignInForm({ onSuccess }: SignInFormProps) {
     setIsLoading(true)
 
     try {
-      // TODO: Implement Supabase authentication
-      await new Promise(resolve => setTimeout(resolve, 1000)) // Simulate API call
-      
-      // Simulate successful sign in
-      signIn({
-        id: '1',
-        email: formData.email,
-        firstName: 'John',
-        lastName: 'Doe'
-      })
-      
+      if (!formData.email || !formData.password) {
+        throw new Error('Please fill in all fields')
+      }
+
+      await signInWithEmail(formData.email, formData.password)
       onSuccess()
-    } catch (err) {
-      setError('Invalid email or password')
+    } catch (err: any) {
+      console.error("Sign in error:", err)
+      if (err.message.includes('Email not confirmed')) {
+        setError('Please verify your email address before signing in')
+      } else if (err.message.includes('Invalid login credentials')) {
+        setError('Invalid email or password')
+      } else {
+        setError(err.message || 'Failed to sign in. Please check your credentials.')
+      }
     } finally {
       setIsLoading(false)
     }
