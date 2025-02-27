@@ -2,7 +2,16 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['images.unsplash.com', 'via.placeholder.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'yyfuastxgelqyuevgmjs.supabase.co',
+        pathname: '/storage/v1/object/public/**',
+      }
+    ],
+    domains: [
+      'yyfuastxgelqyuevgmjs.supabase.co'
+    ],
     unoptimized: process.env.NODE_ENV === 'development'
   },
   typescript: {
